@@ -16,18 +16,21 @@ let layerNextGenArray;
 let MATINGSYSTEM = ["RANDOM", "MONOGAMY", "SOFTMONOGAMY", "POLYGYNY", "POLYANDRY"];
 
 
-
+let updateRate = 60;
+let updateRateGap = updateRate/2;
 
 
 function Layer(layerRows, layerCols){
+    
+    
     
     this.layerCols = layerCols;
     this.layerRows = layerRows;
     
     this.generation = 0;
     this.trueGeneration = 0;
-    this.layer = new Array(layerRows);
     
+    this.layer = new Array(layerRows);
     this.tempLayer = new Array(layerRows);
     
     for(let i = 0; i < this.layer.length; i++){
@@ -45,10 +48,17 @@ function Layer(layerRows, layerCols){
 }
 
 
-
+Layer.prototype.resetTempLayer = function(){
+    for(let i = 0; i < this.tempLayer.length; i++){
+        for(let j = 0; j < this.tempLayer[0].length; j++){
+            this.tempLayer[i][j] = new Deme(i,j, this.layerRows,this.layerCols);
+        }
+    }
+}
 
 
 Layer.prototype.renderGrid = function(){
+    
     for(let i = 0; i < this.layer.length; i++){
         for(let j = 0; j < this.layer[0].length; j++){
             if(this.layer[i][j] === 1) fill(0);
@@ -73,7 +83,11 @@ Layer.prototype.initPop = function(x,y){
 Layer.prototype.runSim = function () {
     //console.log(this.generation);
     this.displayClock();
-    console.log(this.generation + " " + this.trueGeneration);
+    
+    //update generation in html
+    //console.log(this.generation + " " + this.trueGeneration);
+    document.getElementById("htmlGen").innerHTML = this.trueGeneration;
+    
     push();
     translate(0.5 * width / this.layerRows, 0.5 * height / this.layerCols);
     for (let i = 0; i < this.layer.length; i++) {
@@ -84,8 +98,8 @@ Layer.prototype.runSim = function () {
     if (this.generation > 0) {
         if ((this.generation + updateRateGap) % updateRate === 0) {
             this.migratePop();
-            textSize(32);
-            text("Migration", 200,200);
+            //textSize(32);
+            //text("Migration", 200,200);
         }
 
         if ((this.generation) % updateRate === 0) {
@@ -94,6 +108,7 @@ Layer.prototype.runSim = function () {
                     this.layer[i][j].nextGeneration();
                 }
             }
+            this.resetTempLayer();
             this.trueGeneration++;
         }
     }
@@ -102,8 +117,10 @@ Layer.prototype.runSim = function () {
     pop();
 }
 
-let updateRate = 100;
-let updateRateGap = 50;
+
+//Layer.prototype.getGeneration = function(){
+//    this.trueGeneration;
+//}
 
 Layer.prototype.displayClock = function(){
     if(this.generation > 0){
@@ -140,45 +157,34 @@ Layer.prototype.migratePop = function () {
                         let randomDir = random(["up", "down", "left", "right"]);
                         let newX, newY;
                         if (randomDir === "up" && j>0) {
-                            //newX = map(0, 0, this.layerRows, 0, width);
-                            //newY = map(-1, 0, this.layerCols, 0, height);
-                            //this.layer[i][j].population[indIdx].position.add(
-                            //        createVector(newX, newY));
-                            //this.layer[i][j].population[indIdx].position.sub(newX, newY);
-                            let migrantInd = this.layer[i][j].population.splice(indIdx, 1);
-                            migrantInd[0].origin_position.set(this.layer[i][j - 1].demePosition);
-                            this.layer[i][j - 1].population.push(migrantInd[0]);
+
+                            let migrantInd = this.layer[i][j].population.splice(indIdx, 1)[0];
+                            migrantInd.origin_position.set(this.layer[i][j - 1].demePosition);
+                            this.tempLayer[i][j - 1].population.push(migrantInd);
                         } else if (randomDir === "down" && j<this.layerCols-1) {
-                            //console.log(j + " vs "+ layerCols);
-                            //newX = map(0, 0, this.layerRows, 0, width);
-                            //newY = map(1, 0, this.layerCols, 0, height);
-                            //this.layer[i][j].population[indIdx].position.add(
-                            //        createVector(newX, newY));
-                            let migrantInd = this.layer[i][j].population.splice(indIdx, 1);
-                            migrantInd[0].origin_position.set(this.layer[i][j + 1].demePosition);
-                            this.tempLayer[i][j + 1].population.push(migrantInd[0]);
+
+                            let migrantInd = this.layer[i][j].population.splice(indIdx, 1)[0];
+                            migrantInd.origin_position.set(this.layer[i][j + 1].demePosition);
+                            this.tempLayer[i][j + 1].population.push(migrantInd);
                         } else if (randomDir === "left" && i > 0) {
                             
-                            let migrantInd = this.layer[i][j].population.splice(indIdx, 1);
+                            let migrantInd = this.layer[i][j].population.splice(indIdx, 1)[0];
                             //RESET POSITION OF MIGRANT
-                            migrantInd[0].origin_position.set(this.layer[i - 1][j].demePosition);
-                            this.tempLayer[i-1][j].population.push(migrantInd[0]);
+                            migrantInd.origin_position.set(this.layer[i - 1][j].demePosition);
+                            this.tempLayer[i-1][j].population.push(migrantInd);
                             
                         } else if (randomDir === "right" && i < this.layerRows-1) {
-//                            newX = map(1, 0, this.layerRows, 0, width);
-//                            newY = map(0, 0, this.layerCols, 0, height);
-//                            this.layer[i][j].population[indIdx].position.add(
-//                                    createVector(newX, newY));
-                            let migrantInd = this.layer[i][j].population.splice(indIdx, 1);
-                            migrantInd[0].origin_position.set(this.layer[i + 1][j].demePosition);
-                            this.layer[i+1][j].population.push(migrantInd[0]);
+
+                            let migrantInd = this.layer[i][j].population.splice(indIdx, 1)[0];
+                            migrantInd.origin_position.set(this.layer[i + 1][j].demePosition);
+                            this.tempLayer[i+1][j].population.push(migrantInd);
                         }
                     }
                 }
             }
         }
     }
-    
+        
     for (let i = 0; i < this.layer.length; i++) {
         for (let j = 0; j < this.layer[0].length; j++) {
             while(this.tempLayer[i][j].population.length > 0){
@@ -186,9 +192,33 @@ Layer.prototype.migratePop = function () {
             }
         }
     }
-    //this.layer = this.tempLayer;
-
-
 }
 
+
+
+Layer.prototype.moveIndividuals = function (x, y, migrationRate, popSize) {
+    let numberMigrants = popSize * migrationRate;
+    let migrantArray = [];
+    for (let i = 0; i < numberMigrants; i++) {
+        if (popSize > 0) {
+            migrantArray.push(
+                    this.layer[x][y].population.splice(
+                    floor(random(0, popSize)), 1)[0]
+                    );
+            popSize--;
+        } else {
+            break;
+        }
+    }
+    for(let i = migrantArray.length-1; i >= 0; i--){
+        let randomDir = random(["up", "down", "left", "right"]);
+        
+        if (randomDir === "up" && y>0) {
+            let migrant = migrantArray[i].splice(i,1)[0];
+            migrant.origin_position.set(this.layer[x][y-1].demePosition);
+            this.layer[x][y - 1].population.push();
+        }
+    }
+
+}
 

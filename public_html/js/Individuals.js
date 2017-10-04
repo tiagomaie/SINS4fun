@@ -26,14 +26,14 @@ function Individual(xPos, yPos, theFather, theMother, amIMale) {
     
     this.acceleration = createVector(0,0);
     this.velocity = createVector(random(-1,1),random(-1,1));
-    this.maxspeed = 3;
+    this.maxspeed = 2;
     
     this.indSize = 10;
     
     
     this.indFather = theFather;
     this.indMother = theMother;
-
+    
     if (this.indFather === null || this.indMother === null) {
         this.genome = color(
                 this.rGen[0] + this.rGen[1], this.gGen[0] + this.gGen[1], this.bGen[0] + this.bGen[1]
@@ -49,7 +49,6 @@ function Individual(xPos, yPos, theFather, theMother, amIMale) {
                 this.rGen[0] + this.rGen[1], this.gGen[0] + this.gGen[1], this.bGen[0] + this.bGen[1]
                 );
     }
-    
 }
 
 Individual.prototype.getRGen = function () {
@@ -98,7 +97,10 @@ Individual.prototype.render = function(){
     } else {
         stroke(this.female);
     }
+    //text(this.origin_position.x+" "+this.origin_position.y,this.origin_position.x,this.origin_position.y);
+    //rect(this.origin_position.x, this.origin_position.y, this.indSize, this.indSize);
     ellipse(this.position.x, this.position.y, this.indSize, this.indSize);
+    line(this.origin_position.x, this.origin_position.y,this.position.x, this.position.y);
 }
 
 Individual.prototype.update = function (){
@@ -109,7 +111,7 @@ Individual.prototype.update = function (){
     this.velocity.limit(this.maxspeed);
     
     this.position.add(this.velocity);
-    this.position.lerp(this.origin_position,0.1);
+    this.position.lerp(this.origin_position,0.05);
     // Reset acceleration to 0 each cycle
     this.acceleration.mult(0);
 }
@@ -124,7 +126,7 @@ Individual.prototype.flock = function(boids) {
   let coh = this.cohesion(boids);   // Cohesion
   //let coh = this.cohesion(target);   // Cohesion
   // Arbitrarily weight these forces
-  sep.mult(1.5);
+  sep.mult(100.0);
   ali.mult(1.0);
   coh.mult(1.0);
   // Add the force vectors to acceleration

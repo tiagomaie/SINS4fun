@@ -15,15 +15,13 @@ function Deme(x,y,nRows,nCols){
 
 Deme.prototype.createPop = function(){
 
-    let xPos = map(this.x, 0, this.numRows, 0, width);
-    let yPos = map(this.y, 0, this.numCols, 0, height);
-    
-    for(let i = 0;i<this.maxPop;i++){
+    for(let i = 0;i<this.maxPop/2;i++){
         this.population.push(new Individual(this.x,this.y,null,null,false));
-        this.population.push(new Individual(this.x,this.y,null,null,true));
     }
     
-    console.log(xPos + "  " + this.x);
+    for(let i = 0;i<this.maxPop/2;i++){
+         this.population.push(new Individual(this.x,this.y,null,null,true));
+     }
 }
 
 
@@ -53,6 +51,7 @@ Deme.prototype.getFemalePopulation=function (){
 }
 
 Deme.prototype.runDeme = function(){
+    this.renderDeme();
     if(this.population.length>0){
         let currentX = (this.x)*width/this.numRows;
         let currentY = (this.y)*height/this.numCols;
@@ -86,4 +85,38 @@ Deme.prototype.nextGeneration = function () {
         this.population = newPopulation;
     }
     return newPopulation;
+}
+
+
+
+
+Deme.prototype.renderDeme = function() {
+    push();
+    //text(round(this.demePosition.x) + "  " + round(this.demePosition.y), this.demePosition.x,this.demePosition.y);
+    //rectMode(CENTER);
+    
+    let avgR=0,avgG=0,avgB=0;
+    if(this.population.length === 0){
+        avgR = 0;
+        avgG = 0;
+        avgB = 0;
+    }else{
+        for(let i = 0; i < this.population.length; i++) {
+            avgR += (this.population[i].rGen[0] + this.population[i].rGen[1]);
+            avgG += (this.population[i].gGen[0] + this.population[i].gGen[1]);
+            avgB += (this.population[i].bGen[0] + this.population[i].bGen[1]);
+        }
+        avgR /= this.population.length;
+        avgG /= this.population.length;
+        avgB /= this.population.length;
+    }
+    
+    let c =color(avgR,avgG,avgB);
+    
+    noStroke();
+    fill(c);
+    rectMode(CENTER);
+    rect(this.demePosition.x,this.demePosition.y,width/this.numRows/1.5, height/this.numCols/1.5);
+    pop();
+    
 }
