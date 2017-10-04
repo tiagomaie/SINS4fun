@@ -148,16 +148,15 @@ Layer.prototype.getNumberCols = function(){
 }
 
 Layer.prototype.migratePop = function () {
-    let migrationRate = 0.3;
+    let migrationRate = parseFloat(document.getElementById("migrationRate").innerHTML);
+    
     for (let i = 0; i < this.layer.length; i++) {
         for (let j = 0; j < this.layer[0].length; j++) {
             if (this.layer[i][j].population.length > 0) {
                 for (let indIdx = this.layer[i][j].population.length - 1; indIdx >= 0; indIdx--) {
                     if (random(1) < migrationRate) {
                         let randomDir = random(["up", "down", "left", "right"]);
-                        let newX, newY;
                         if (randomDir === "up" && j>0) {
-
                             let migrantInd = this.layer[i][j].population.splice(indIdx, 1)[0];
                             migrantInd.origin_position.set(this.layer[i][j - 1].demePosition);
                             this.tempLayer[i][j - 1].population.push(migrantInd);
@@ -169,7 +168,6 @@ Layer.prototype.migratePop = function () {
                         } else if (randomDir === "left" && i > 0) {
                             
                             let migrantInd = this.layer[i][j].population.splice(indIdx, 1)[0];
-                            //RESET POSITION OF MIGRANT
                             migrantInd.origin_position.set(this.layer[i - 1][j].demePosition);
                             this.tempLayer[i-1][j].population.push(migrantInd);
                             
@@ -195,7 +193,7 @@ Layer.prototype.migratePop = function () {
 }
 
 
-
+/*Not yet finished*/
 Layer.prototype.moveIndividuals = function (x, y, migrationRate, popSize) {
     let numberMigrants = popSize * migrationRate;
     let migrantArray = [];

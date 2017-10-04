@@ -12,28 +12,56 @@ const INITPOPY = 0;
 const TIMESTEPS = null;
 
 
-let sliderDefault;
-let outputSlider;
+let layerSizeSlider;
+let layerSizeSliderOutput;
+
+let mutationStepSlider;
+let mutationStepSliderOutput;
+
+let migrationRateSlider;
+let migrationRateSliderOutput;
 
 function setup() {
-  createCanvas(700,700);
-  //background(1);
-  
-  
-  frameRate(60);
-  elipPos = createVector(200,200);
-  
-  
-  sliderDefault = document.getElementById("myRange");
-  outputSlider = document.getElementById("f");
-  outputSlider.innerHTML = sliderDefault.value;
-  
-  
-  sliderDefault.oninput = function() {
-    outputSlider.innerHTML = this.value;
-}
-  resetSim();
-  
+    createCanvas(700, 700);
+    //background(1);
+
+
+    frameRate(60);
+    elipPos = createVector(200, 200);
+
+
+    layerSizeSlider = document.getElementById("demesPerSideRange");
+    layerSizeSliderOutput = document.getElementById("layerSize");
+    layerSizeSliderOutput.innerHTML = layerSizeSlider.value;
+
+
+    layerSizeSlider.oninput = function () {
+        layerSizeSliderOutput.innerHTML = this.value;
+    }
+    
+    mutationStepSlider = document.getElementById("stepsPerMutationRange");
+    mutationStepSliderOutput = document.getElementById("mutSteps");
+    mutationStepSliderOutput.innerHTML = mutationStepSlider.value;
+
+
+    mutationStepSlider.oninput = function () {
+        mutationStepSliderOutput.innerHTML = this.value;
+    }
+    
+    migrationRateSlider = document.getElementById("migrationRateRange");
+    migrationRateSliderOutput = document.getElementById("migrationRate");
+    migrationRateSliderOutput.innerHTML = 
+            parseFloat(parseInt(migrationRateSlider.value)/100).toFixed(2);
+
+
+    migrationRateSlider.oninput = function () {
+        migrationRateSliderOutput.innerHTML = 
+                parseFloat(parseInt(this.value)/100).toFixed(2);
+    }
+    
+    
+    resetSim();
+
 }
 
 let elipPos;
@@ -56,7 +84,7 @@ function draw() {
  
   ellipse(elipPos.x,elipPos.y,10,10);
   
-  if(sliderDefault.value != prvValue){
+  if(layerSizeSlider.value !== prvValue){
       resetSim();
   }
 }
@@ -64,10 +92,10 @@ function draw() {
 
 function resetSim(){
     
-  let nrows = parseInt(sliderDefault.value);
-  let ncols = parseInt(sliderDefault.value);
+  let nrows = parseInt(layerSizeSlider.value);
+  let ncols = parseInt(layerSizeSlider.value);
 
-  prvValue = sliderDefault.value;
+  prvValue = layerSizeSlider.value;
   //theLayer = new Layer(LAYERROWS,LAYERCOLS);
   theLayer = new Layer(nrows,ncols);
   

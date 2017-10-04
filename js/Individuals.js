@@ -15,7 +15,8 @@ function Individual(xPos, yPos, theFather, theMother, amIMale) {
     //this.deme_j = yPos;
     
     this.mutationRate = 0.2;
-    this.mutationStep = 1;
+    //this.mutationStep = 1;
+    this.mutationStep = parseInt(document.getElementById("stepsPerMutationRange").value);
     
     this.origin_position = createVector(xPos,yPos);
     

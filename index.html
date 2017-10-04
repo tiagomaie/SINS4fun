@@ -41,9 +41,17 @@
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X','auto');ga('send','pageview');
         </script>-->
-        <div id="slidecontainer">
-            Number of demes per side: <span id="f" style="font-weight:bold;color:red"></span>
-            <input type="range" min="1" max="10" value="5" id="myRange">
+        <div id="layersizeslidecontainer">
+            Number of demes per side: <span id="layerSize" style="font-weight:bold;color:red"></span>
+            <input type="range" min="1" max="10" value="5" id="demesPerSideRange">
+        </div>
+        <div id="mutationstepslidecontainer">
+            Steps per mutation: <span id="mutSteps" style="font-weight:bold;color:red"></span>&nbsp;
+            <input type="range" min="1" max="10" value="1" id="stepsPerMutationRange">
+        </div>
+        <div id="migrationrateslidecontainer">
+            Migration rate: <span id="migrationRate" style="font-weight:bold;color:red"></span>
+            <input type="range" min="0" max="100" value="30" id="migrationRateRange">
         </div>
         <div id="generationCounter">
             Generation: <span id="htmlGen" style="font-weight:bold;color:red"></span>

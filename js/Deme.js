@@ -60,9 +60,6 @@ Deme.prototype.runDeme = function(){
                 this.population[i].flock(this.population);
                 this.population[i].update();
             }
-            //console.log("i="+i) 
-            //console.log(" x="+this.population[i].position.x);
-            //console.log(" y="+this.population[i].position.y);
             this.population[i].render();
         }
     }
@@ -84,7 +81,7 @@ Deme.prototype.nextGeneration = function () {
     }else{
         this.population = newPopulation;
     }
-    return newPopulation;
+    //return newPopulation;
 }
 
 
