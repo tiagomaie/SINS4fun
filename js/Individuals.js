@@ -64,12 +64,12 @@ Individual.prototype.getBGen = function () {
 
 Individual.prototype.mutation = function(mutRate){
     if(random(1) < mutRate){
-        this.rGen[0] += random([-this.mutationStep, this.mutationStep]);
-        this.rGen[1] += random([-this.mutationStep, this.mutationStep]);
-        this.gGen[0] += random([-this.mutationStep, this.mutationStep]);
-        this.gGen[1] += random([-this.mutationStep, this.mutationStep]);
-        this.bGen[0] += random([-this.mutationStep, this.mutationStep]);
-        this.bGen[1] += random([-this.mutationStep, this.mutationStep]);
+        this.rGen[0] += random([-this.mutationStep,0 , this.mutationStep]);
+        this.rGen[1] += random([-this.mutationStep,0 , this.mutationStep]);
+        this.gGen[0] += random([-this.mutationStep,0 , this.mutationStep]);
+        this.gGen[1] += random([-this.mutationStep,0 , this.mutationStep]);
+        this.bGen[0] += random([-this.mutationStep,0 , this.mutationStep]);
+        this.bGen[1] += random([-this.mutationStep,0 , this.mutationStep]);
     }
 }
 
@@ -92,16 +92,25 @@ Individual.prototype.isMale = function(){
 Individual.prototype.render = function(){
     fill(this.genome);
 
-    strokeWeight(1);
-    if (this.sex) {
-        stroke(this.male);
-    } else {
-        stroke(this.female);
+    noStroke();
+    if (document.getElementById("drawLineChkbox").checked) {
+        if (this.sex) {
+            stroke(this.male);
+        } else {
+            stroke(this.female);
+        }
+        line(this.origin_position.x, this.origin_position.y, this.position.x, this.position.y);
+        noStroke();
     }
-    //text(this.origin_position.x+" "+this.origin_position.y,this.origin_position.x,this.origin_position.y);
-    //rect(this.origin_position.x, this.origin_position.y, this.indSize, this.indSize);
-    ellipse(this.position.x, this.position.y, this.indSize, this.indSize);
-    line(this.origin_position.x, this.origin_position.y,this.position.x, this.position.y);
+    if(document.getElementById("drawStrokeChkbox").checked){
+        strokeWeight(1);
+        if (this.sex) {
+            stroke(this.male);
+        } else {
+            stroke(this.female);
+        }
+    }
+    ellipse(this.position.x, this.position.y, this.indSize);
 }
 
 Individual.prototype.update = function (){
@@ -112,7 +121,7 @@ Individual.prototype.update = function (){
     this.velocity.limit(this.maxspeed);
     
     this.position.add(this.velocity);
-    this.position.lerp(this.origin_position,0.05);
+    this.position.lerp(this.origin_position,0.10);
     // Reset acceleration to 0 each cycle
     this.acceleration.mult(0);
 }

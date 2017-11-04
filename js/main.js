@@ -15,11 +15,17 @@ const TIMESTEPS = null;
 let layerSizeSlider;
 let layerSizeSliderOutput;
 
+let popSizeSlider;
+let popSizeSliderOutput;
+
 let mutationStepSlider;
 let mutationStepSliderOutput;
 
 let migrationRateSlider;
 let migrationRateSliderOutput;
+
+//This option slows the program down considerably. Enable only when debugging.
+p5.disableFriendlyErrors = true;
 
 function setup() {
     createCanvas(700, 700);
@@ -37,6 +43,15 @@ function setup() {
 
     layerSizeSlider.oninput = function () {
         layerSizeSliderOutput.innerHTML = this.value;
+    }
+    
+    popSizeSlider = document.getElementById("popSizeRange");
+    popSizeSliderOutput = document.getElementById("popSize");
+    popSizeSliderOutput.innerHTML = popSizeSlider.value;
+
+
+    popSizeSlider.oninput = function () {
+        popSizeSliderOutput.innerHTML = this.value;
     }
     
     mutationStepSlider = document.getElementById("stepsPerMutationRange");
@@ -65,7 +80,8 @@ function setup() {
 }
 
 let elipPos;
-let prvValue;
+let prvLSizeValue;
+let prvPopSizeValue;
 function draw() {
 
   theLayer.renderGrid();
@@ -84,7 +100,8 @@ function draw() {
  
   ellipse(elipPos.x,elipPos.y,10,10);
   
-  if(layerSizeSlider.value !== prvValue){
+  if(layerSizeSlider.value !== prvLSizeValue 
+          || popSizeSlider.value !== prvPopSizeValue){
       resetSim();
   }
 }
@@ -94,10 +111,13 @@ function resetSim(){
     
   let nrows = parseInt(layerSizeSlider.value);
   let ncols = parseInt(layerSizeSlider.value);
+  
+  let popSize = parseInt(popSizeSlider.value);
 
-  prvValue = layerSizeSlider.value;
+  prvLSizeValue = layerSizeSlider.value;
+  prvPopSizeValue = popSizeSlider.value;
   //theLayer = new Layer(LAYERROWS,LAYERCOLS);
-  theLayer = new Layer(nrows,ncols);
+  theLayer = new Layer(nrows,ncols,popSize);
   
   theLayer.renderGrid();
   //theLayer.initPop(INITPOPX,INITPOPY);
@@ -105,7 +125,7 @@ function resetSim(){
   //  theLayer.initPop(LAYERCOLS-1,0);
   for(let i = 0; i < nrows; i++){
       for(let j = 0; j < ncols; j++){
-        theLayer.initPop(i,j);
+        theLayer.initPop(i,j,popSize);
       }
   }
 }

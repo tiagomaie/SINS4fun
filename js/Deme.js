@@ -1,9 +1,9 @@
 
 
-function Deme(x,y,nRows,nCols){
+function Deme(x,y,nRows,nCols,popSize){
     
     this.population = [];
-    this.maxPop = 10;
+    this.maxPop = popSize*2;
     
     this.numRows = nRows;
     this.numCols = nCols;
@@ -13,13 +13,15 @@ function Deme(x,y,nRows,nCols){
     this.demePosition = createVector(this.x,this.y);
 }
 
-Deme.prototype.createPop = function(){
+Deme.prototype.createPop = function(popSize){
 
-    for(let i = 0;i<this.maxPop/2;i++){
+    this.maxpop = popSize * 2;
+    
+    for(let i = 0;i<popSize;i++){
         this.population.push(new Individual(this.x,this.y,null,null,false));
     }
     
-    for(let i = 0;i<this.maxPop/2;i++){
+    for(let i = 0;i<popSize;i++){
          this.population.push(new Individual(this.x,this.y,null,null,true));
      }
 }
@@ -53,10 +55,10 @@ Deme.prototype.getFemalePopulation=function (){
 Deme.prototype.runDeme = function(){
     this.renderDeme();
     if(this.population.length>0){
-        let currentX = (this.x)*width/this.numRows;
-        let currentY = (this.y)*height/this.numCols;
+        //let currentX = (this.x)*width/this.numRows;
+        //let currentY = (this.y)*height/this.numCols;
         for(let i = 0; i < this.population.length; i++){
-            if(this.population.length>1){
+            if(this.population.length>0){
                 this.population[i].flock(this.population);
                 this.population[i].update();
             }
@@ -69,15 +71,17 @@ Deme.prototype.nextGeneration = function () {
     let newPopulation = [];
     let nMales = this.getMalePopulation().length;
     let nFemales = this.getFemalePopulation().length;
+    let growthRate = 0.8;
+    let newPopSize = 2 * nFemales * ((1+growthRate)/(1+growthRate*((2*nFemales)/this.maxPop)));
+
     if(nMales >= 1 && nFemales >= 1){
-        while(newPopulation.length < this.maxPop){
+        while(newPopulation.length < newPopSize){
             let dad = random(this.getMalePopulation());
             let mom = random(this.getFemalePopulation());
-            newPopulation.push(mom.reproduction(mom,dad,this.demePosition));
-            
+            newPopulation.push(mom.reproduction(mom,dad,this.demePosition));  
         }
         this.population = newPopulation;
-        
+        newPopulation = [];   
     }else{
         this.population = newPopulation;
     }

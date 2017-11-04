@@ -20,7 +20,7 @@ let updateRate = 60;
 let updateRateGap = updateRate/2;
 
 
-function Layer(layerRows, layerCols){
+function Layer(layerRows, layerCols, popSize){
     
     
     
@@ -33,6 +33,8 @@ function Layer(layerRows, layerCols){
     this.layer = new Array(layerRows);
     this.tempLayer = new Array(layerRows);
     
+    this.popSize = popSize;
+    
     for(let i = 0; i < this.layer.length; i++){
         this.layer[i] = new Array(this.layerCols);
         this.tempLayer[i] = new Array(this.layerCols);
@@ -40,8 +42,8 @@ function Layer(layerRows, layerCols){
     
     for(let i = 0; i < this.layer.length; i++){
         for(let j = 0; j < this.layer[0].length; j++){
-            this.layer[i][j] = new Deme(i,j, this.layerRows,this.layerCols);
-            this.tempLayer[i][j] = new Deme(i,j, this.layerRows,this.layerCols);
+            this.layer[i][j] = new Deme(i,j, this.layerRows,this.layerCols,this.popSize);
+            this.tempLayer[i][j] = new Deme(i,j, this.layerRows,this.layerCols,this.popSize);
         }
     }
     
@@ -51,7 +53,7 @@ function Layer(layerRows, layerCols){
 Layer.prototype.resetTempLayer = function(){
     for(let i = 0; i < this.tempLayer.length; i++){
         for(let j = 0; j < this.tempLayer[0].length; j++){
-            this.tempLayer[i][j] = new Deme(i,j, this.layerRows,this.layerCols);
+            this.tempLayer[i][j] = new Deme(i,j, this.layerRows,this.layerCols,this.popSize);
         }
     }
 }
@@ -75,8 +77,8 @@ Layer.prototype.renderGrid = function(){
 }
 
 
-Layer.prototype.initPop = function(x,y){
-    this.layer[x][y].createPop();
+Layer.prototype.initPop = function(x,y,popSize){
+    this.layer[x][y].createPop(popSize);
 }
 
 

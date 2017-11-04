@@ -1,3 +1,5 @@
 {
-    "name": "SINS_DemographySim", "version": "1.0.0", "keywords": ["util", "functional", "server", "client", "browser"], "author": "tiagomaie <tiagomaie at igc>", "contributors": [], "dependencies": {}
+    "name": "SINS_DemographySim", "version": "1.0.0", "keywords": ["util", "functional", "server", "client", "browser"], "author": "tiagomaie <tiagomaie at igc>", "contributors": [], "dependencies": {}, "scripts":{
+"start":"node index.html"}
+
 }
