@@ -56,8 +56,12 @@
             <input type="range" min="0" max="100" value="30" id="migrationRateRange">
         </div>
         <div id="drawstrokecontainer">
+            Draw individual genotypes? <input type="checkbox" name="IndGenotype" value="true" id="drawIndividualGenotypeChkbox" checked>&nbsp; 
+            Draw individuals as points? <input type="checkbox" name="IndPoint" value="true" id="drawIndividualPointsChkbox" checked>&nbsp;
             Draw stroke? <input type="checkbox" name="Stroke" value="true" id="drawStrokeChkbox" checked>&nbsp;
-            Draw line? <input type="checkbox" name="Lines" value="true" id="drawLineChkbox" checked> <br>
+            Draw line? <input type="checkbox" name="Lines" value="true" id="drawLineChkbox" checked>&nbsp; <br>
+            Show clock? <input type="checkbox" name="Clock" value="true" id="showClockChkbox" checked>&nbsp;
+            Show deme stats? <input type="checkbox" name="DemeStats" value="true" id="showDemeStatsChkbox" checked><br>
         </div>
         <div id="generationCounter">
             Generation: <span id="htmlGen" style="font-weight:bold;color:red"></span>

@@ -96,9 +96,9 @@ function draw() {
   
   //mousePressed();
   
-  elipPos.lerp(createVector(mouseX,mouseY),0.5);
+  //elipPos.lerp(createVector(mouseX,mouseY),0.5);
  
-  ellipse(elipPos.x,elipPos.y,10,10);
+  //ellipse(elipPos.x,elipPos.y,10,10);
   
   if(layerSizeSlider.value !== prvLSizeValue 
           || popSizeSlider.value !== prvPopSizeValue){
@@ -117,6 +117,7 @@ function resetSim(){
   prvLSizeValue = layerSizeSlider.value;
   prvPopSizeValue = popSizeSlider.value;
   //theLayer = new Layer(LAYERROWS,LAYERCOLS);
+  theLayer = null;
   theLayer = new Layer(nrows,ncols,popSize);
   
   theLayer.renderGrid();

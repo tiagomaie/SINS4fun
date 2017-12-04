@@ -31,25 +31,21 @@ function Individual(xPos, yPos, theFather, theMother, amIMale) {
     
     this.indSize = 10;
     
-    
-    this.indFather = theFather;
-    this.indMother = theMother;
-    
-    if (this.indFather === null || this.indMother === null) {
-        this.genome = color(
-                this.rGen[0] + this.rGen[1], this.gGen[0] + this.gGen[1], this.bGen[0] + this.bGen[1]
-                );
-    } else {
-        this.rGen[0] = this.indFather.getRGen()[random([0, 1])];
-        this.rGen[1] = this.indMother.getRGen()[random([0, 1])];
-        this.gGen[0] = this.indFather.getGGen()[random([0, 1])];
-        this.gGen[1] = this.indMother.getGGen()[random([0, 1])];
-        this.bGen[0] = this.indFather.getBGen()[random([0, 1])];
-        this.bGen[1] = this.indMother.getBGen()[random([0, 1])];
-        this.genome = color(
-                this.rGen[0] + this.rGen[1], this.gGen[0] + this.gGen[1], this.bGen[0] + this.bGen[1]
-                );
+    if (theFather !== null && theMother !== null) {
+        this.rGen[0] = theFather.getRGen()[random([0, 1])];
+        this.rGen[1] = theMother.getRGen()[random([0, 1])];
+        this.gGen[0] = theFather.getGGen()[random([0, 1])];
+        this.gGen[1] = theMother.getGGen()[random([0, 1])];
+        this.bGen[0] = theFather.getBGen()[random([0, 1])];
+        this.bGen[1] = theMother.getBGen()[random([0, 1])];
     }
+    this.genome = color(
+                this.rGen[0] + this.rGen[1], this.gGen[0] + this.gGen[1], this.bGen[0] + this.bGen[1]
+                );
+}
+
+Individual.prototype.constrain = function(number, min, max){
+        return Math.max(Math.min(number, max), min);
 }
 
 Individual.prototype.getRGen = function () {
@@ -71,12 +67,18 @@ Individual.prototype.mutation = function(mutRate){
         this.bGen[0] += random([-this.mutationStep,0 , this.mutationStep]);
         this.bGen[1] += random([-this.mutationStep,0 , this.mutationStep]);
     }
+    
+    this.rGen[0] = this.constrain(this.rGen[0],0,127);
+    this.rGen[1] = this.constrain(this.rGen[1],0,127);
+    this.gGen[0] = this.constrain(this.gGen[0],0,127);
+    this.gGen[1] = this.constrain(this.gGen[1],0,127);
+    this.bGen[0] = this.constrain(this.bGen[0],0,127);
+    this.bGen[1] = this.constrain(this.bGen[1],0,127);
 }
 
 Individual.prototype.reproduction = function(mom, dad, demePositionVec){
     
     let childPos = p5.Vector.lerp(mom.position, demePositionVec,0.7);
-    
     
     let child = new Individual(childPos.x, childPos.y, dad, mom, random([true,false]));
     //let child = new Individual(mom.position.x, mom.position.y, dad, mom, random([true,false]));
@@ -90,8 +92,7 @@ Individual.prototype.isMale = function(){
 
 
 Individual.prototype.render = function(){
-    fill(this.genome);
-
+    
     noStroke();
     if (document.getElementById("drawLineChkbox").checked) {
         if (this.sex) {
@@ -100,17 +101,38 @@ Individual.prototype.render = function(){
             stroke(this.female);
         }
         line(this.origin_position.x, this.origin_position.y, this.position.x, this.position.y);
+        
+    }
+
+    
+    if(document.getElementById("drawIndividualGenotypeChkbox").checked){
+        fill(this.genome);
         noStroke();
-    }
-    if(document.getElementById("drawStrokeChkbox").checked){
-        strokeWeight(1);
-        if (this.sex) {
-            stroke(this.male);
-        } else {
-            stroke(this.female);
+        if (document.getElementById("drawStrokeChkbox").checked) {
+            strokeWeight(1);
+            if (this.sex) {
+                stroke(this.male);
+            } else {
+                stroke(this.female);
+            }
         }
+        ellipse(this.position.x, this.position.y, this.indSize);
+        
+    } 
+    
+    
+    
+    if(document.getElementById("drawIndividualPointsChkbox").checked){
+        noStroke();
+        if (this.sex) {
+            fill(this.male);
+        } else {
+            fill(this.female);
+        }
+        ellipse(this.position.x, this.position.y, 3);
     }
-    ellipse(this.position.x, this.position.y, this.indSize);
+    
+
 }
 
 Individual.prototype.update = function (){

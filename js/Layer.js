@@ -53,6 +53,7 @@ function Layer(layerRows, layerCols, popSize){
 Layer.prototype.resetTempLayer = function(){
     for(let i = 0; i < this.tempLayer.length; i++){
         for(let j = 0; j < this.tempLayer[0].length; j++){
+            this.tempLayer[i][j] = null;
             this.tempLayer[i][j] = new Deme(i,j, this.layerRows,this.layerCols,this.popSize);
         }
     }
@@ -84,7 +85,9 @@ Layer.prototype.initPop = function(x,y,popSize){
 
 Layer.prototype.runSim = function () {
     //console.log(this.generation);
-    this.displayClock();
+    if(document.getElementById("showClockChkbox").checked){
+        this.displayClock();
+    }
     
     //update generation in html
     //console.log(this.generation + " " + this.trueGeneration);
@@ -135,7 +138,7 @@ Layer.prototype.displayClock = function(){
         if((this.generation) % updateRate > 0){
             let mapColor = map((this.generation) % updateRate,0,updateRate,0,255);
             let mapWidth = map((this.generation) % updateRate,0,updateRate,0,width);
-            fill(mapColor);
+            fill(0,mapColor,0);
             rect(0,height-10,mapWidth,10);
         }
     }

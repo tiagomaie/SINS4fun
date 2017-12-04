@@ -54,15 +54,17 @@ Deme.prototype.getFemalePopulation=function (){
 
 Deme.prototype.runDeme = function(){
     this.renderDeme();
-    if(this.population.length>0){
-        //let currentX = (this.x)*width/this.numRows;
-        //let currentY = (this.y)*height/this.numCols;
-        for(let i = 0; i < this.population.length; i++){
-            if(this.population.length>0){
+    let boolRenderPop = document.getElementById("drawLineChkbox").checked 
+            || document.getElementById("drawIndividualGenotypeChkbox").checked 
+            || document.getElementById("drawStrokeChkbox").checked 
+            || document.getElementById("drawIndividualPointsChkbox").checked;
+    if (boolRenderPop) {
+        if (this.population.length > 0) {
+            for (let i = 0; i < this.population.length; i++) {
                 this.population[i].flock(this.population);
                 this.population[i].update();
+                this.population[i].render();
             }
-            this.population[i].render();
         }
     }
 }
@@ -80,11 +82,12 @@ Deme.prototype.nextGeneration = function () {
             let mom = random(this.getFemalePopulation());
             newPopulation.push(mom.reproduction(mom,dad,this.demePosition));  
         }
-        this.population = newPopulation;
-        newPopulation = [];   
-    }else{
-        this.population = newPopulation;
     }
+    
+    for(let i = 0; i < this.population.length; i++){
+        this.population[i] = null;
+    }
+    this.population = newPopulation;
     //return newPopulation;
 }
 
@@ -93,14 +96,12 @@ Deme.prototype.nextGeneration = function () {
 
 Deme.prototype.renderDeme = function() {
     push();
-    //text(round(this.demePosition.x) + "  " + round(this.demePosition.y), this.demePosition.x,this.demePosition.y);
-    //rectMode(CENTER);
     
     let avgR=0,avgG=0,avgB=0;
     if(this.population.length === 0){
-        avgR = 0;
-        avgG = 0;
-        avgB = 0;
+        avgR = 255;
+        avgG = 255;
+        avgB = 255;
     }else{
         for(let i = 0; i < this.population.length; i++) {
             avgR += (this.population[i].rGen[0] + this.population[i].rGen[1]);
@@ -112,12 +113,27 @@ Deme.prototype.renderDeme = function() {
         avgB /= this.population.length;
     }
     
-    let c =color(avgR,avgG,avgB);
+    let c = color(avgR,avgG,avgB);
     
     noStroke();
-    fill(c);
+    fill(c,0.5);
     rectMode(CENTER);
     rect(this.demePosition.x,this.demePosition.y,width/this.numRows/1.5, height/this.numCols/1.5);
     pop();
+
+    if (document.getElementById("showDemeStatsChkbox").checked) {
+        rectMode(CENTER);
+        noStroke();
+        textSize(15 * (5/this.numCols));
+        
+        fill(0);
+        let demeStats = "R:"+parseFloat(avgR).toFixed(0)
+                + " G:"+parseFloat(avgG).toFixed(0)
+                + " B:"+parseFloat(avgB).toFixed(0)+"\n"
+                + "Size:"+this.population.length;
+        text(demeStats, this.demePosition.x,this.demePosition.y,width/this.numRows, height/this.numCols);
+    }
+    
+    
     
 }
